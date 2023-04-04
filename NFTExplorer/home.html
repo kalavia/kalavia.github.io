@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title> Manage Hive-Engine NFTs </title>
+    <link rel="icon" href="images/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="global.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"> </script>
+    <script src="https://code.jquery.com/jquery-latest.js"> </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"> </script>
+    <script type="text/javascript" src="showNFT.js"></script>
+    <style>
+.card_parent {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 600px;
+  border: 0px;
+}
+
+.card_bg {
+  position: relative;
+  top: 0;
+  left: 0;
+  border: 0px solid #000000;
+}
+
+.card_fg {
+  position: absolute;
+  top: 90px;
+  left: 90px;
+  width: 420px;
+  height: 420px;
+  border: 0px solid #000000;
+}
+    </style>
+</head>
+	<body id = "body">   
+      <div id = "navigation"> 
+        <h1 style = "color:green;" >   
+        Kalavian Tales NFT Manager   
+    </h1> 
+          
+    <ul style = "list-style-type: none; margin: 0; padding: -10; overflow: hidden; padding: 5px">
+         <li style = "display: inline"><a  class = "aButton" href="home.html">Wallet</a></li>
+         <li style = "display: inline"><a class = "aButton" href="market.html">Market</a></li>
+         <li style = "display: inline"><a class = "aButton" href="marketStream.html">Market Stream</a></li>
+         <li style = "display: inline"><a class = "aButton" href="transfer-history.html">Transfer History</a></li>
+    </ul>
+        
+    <p style = "font-size: 15px"> If you find any bug please report them <a href="https://github.com/kalavia/kalavia.github.io/issues">here</a>. </p>
+            
+    <p id = "header" style =  "font-size: 15px; font-weight: bold;"> Click on the button to create a table from the JSON data.<br><br> Show</p>
+          
+          <select id="game">
+	    <option value="KATAN">Kalavian Tales</option>
+            <option value="CITY">dCity</option>
+          </select>
+          
+          <p id = "topText" style =  
+        "font-size: 15px; font-weight: bold;"> 
+              NFTs for account: @ </p>
+          
+	<input type="text" class = "inputField" id="usernameInput" name="usernameInput">
+      
+    <button class = "mainButton" onclick = "buildButtonClicked();"> 
+        Show NFTs 
+    </button> 
+	  
+    <br><br> 
+     </div>
+
+    <div id = "tablediv">    
+        <input type="text" class = "inputField" id="searchField" style = "visibility: hidden">  
+        <label id = "totalCardsLabel"></label>
+        <p id ="dataTable"> </p>
+        <br> <br>
+        <div class="sticky" id = "stickyMenu" style = "visibility: hidden">
+             <button class = "mainButton" id = "sendMultipleButton" onclick = "multipleSendButton()" > 
+                Transfer selected
+            </button> 
+            <button class = "mainButton" id = "sellMultipleButton" onclick = "multipleSellButton()" > 
+                Sell selected
+            </button>                                                                                         
+    </div>
+    </div>
+        
+<div id="transferPopUp" class="popUpClass">
+
+  <!-- popUpClass content -->
+  <div class="popUpClass-content">
+    <label id = "succesIndicator"></label>
+    <span class="close">&times;</span>
+    <label id = "sendToLabel" for="toAccount">Send to: </label>
+    <input class = "inputField" id = "toAccountInput" type="text" placeholder=" account name" name="toAccount" required>
+    <button class = "mainButton" id = "broadcastTXButton"> Send NFT(s)</button>
+  </div>
+    
+</div>   
+
+<div id= "modalDialog"> </div>
+
+</body>
+</html>
+
+

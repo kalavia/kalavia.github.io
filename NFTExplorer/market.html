@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title> Manage Hive-Engine NFTs </title>
+        <link rel="icon" href="images/favicon.ico">
+        <link rel="stylesheet" type="text/css" href="global.css">
+        <link rel="stylesheet" type="text/css" href="./dtstyle/datatables.css">
+        <link rel="stylesheet" type="text/css" href="./dtstyle/searchPanes.dataTables.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+        <script src="https://code.jquery.com/jquery-latest.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="market.js"></script> 
+    </head>
+    <body id = "body">
+        <div id = "loginArea" >
+            <div id = "loginAreaFrame"> 
+                <input type="text" class = "inputField" id="loginAccountName"> 
+                <button placeholder="Account name" id ="loginButton" class = "mainButton" onclick="login()"> 
+                    Login
+                </button>    
+            </div>
+        </div>
+        <div id = "navigation" style = "margin-left: 20%; margin-right: 20%;" > 
+            <h1 style = "color:green;" >  
+	    Kalavian Tales NFT Manager
+            </h1> 
+          
+            <ul style = "list-style-type: none; margin: 0; padding: -10; overflow: hidden; padding: 5px;">
+                <li style = "display: inline"><a class = "aButton" href="home.html">Wallet</a></li>
+                <li style = "display: inline"><a class = "aButton" href="market.html">Market</a></li>
+                <li style = "display: inline"><a  class = "aButton" href="marketStream.html">Market Stream</a></li>
+                <li style = "display: inline;"><a class = "aButton" href="transfer-history.html">Transfer History</a></li>
+            </ul>
+
+	    <p style = "font-size: 15px"> If you find any bug please report them <a href="https://github.com/kalavia/kalavia.github.io/issues">here</a>. </p>
+             
+            <p> Note: Loading thousands of items can take some time, please be patient.</p>
+        </div>   
+        <div id = "" style = "display: inline">
+            <p>Choose market:</p>
+            <select id="game">
+                <option value="STAR">Rising Star</option>
+                <option value="CITY">dCity</option>
+                <option value="DCROPS">dCrops</option>
+                <option value="NFTSR">NFT Showroom</option>
+            </select>
+            <button id = "loadButton" class = "mainButton" onclick = "loadMarket();"> 
+                Load Market
+            </button>
+            <br><br> 
+        </div>
+        <div id = "tableArea">
+            <div class="sticky" id = "stickyMenu" style = "visibility: visible">
+            </div>
+        </div>        
+    </body>
+</html>
