@@ -91,9 +91,9 @@ function appendText(String) {
 
 function getTransferString(json) {
     text = json.nfts[0].symbol + " NFT(s) with ID(s) ";
-    text += '<a ' + 'target="_blank"' + ' href="https://kalavia.github.io/NFTExplorer/lookup.html?table=' + json.nfts[0].symbol + '&id=' + json.nfts[0].ids[0] + '">'+ json.nfts[0].ids[0] +'</a>' 
+    text += '<a ' + 'target="_blank"' + ' href="https://kalavia.github.io/nftmanager/lookup.html?table=' + json.nfts[0].symbol + '&id=' + json.nfts[0].ids[0] + '">'+ json.nfts[0].ids[0] +'</a>' 
     for (y = 1; y < json.nfts[0].ids.length; y++) {
-        text += ', <a ' + 'target="_blank"' + ' href="https://kalavia.github.io/NFTExplorer/lookup.html?table=' + json.nfts[0].symbol + '&id=' + json.nfts[0].ids[y] + '">'+ json.nfts[0].ids[y] +'</a>' 
+        text += ', <a ' + 'target="_blank"' + ' href="https://kalavia.github.io/nftmanager/lookup.html?table=' + json.nfts[0].symbol + '&id=' + json.nfts[0].ids[y] + '">'+ json.nfts[0].ids[y] +'</a>' 
     }
     text += " to " + '<a ' + 'target="_blank"' + ' href="https://peakd.com/@' + json.to + '">' + json.to + '</a>';
     return text;
