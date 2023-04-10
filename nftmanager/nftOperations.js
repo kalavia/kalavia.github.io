@@ -94,7 +94,7 @@ function sellNFT(nft, price, priceSymbol) {
                 transaction.contractPayload.nfts = [String(nft._id)];
                 transaction.contractPayload.price = price;
                 transaction.contractPayload.priceSymbol = priceSymbol;
-                transaction.contractPayload.fee = 250;
+                transaction.contractPayload.fee = 500;
                 
                 message = "Sell " + currentTable + " NFT with ID " + nft._id + "(" + nft.type + ")" + " for " + price + " " + priceSymbol;
                 hive_keychain.requestCustomJson(document.querySelector('#usernameInput').value, "ssc-mainnet-hive", "Active", JSON.stringify(transaction), message, function(response) {
@@ -121,7 +121,7 @@ function sellmultipleNFTs(nfts, price, priceSymbol) {
                 transaction.contractPayload.nfts = nfts;
                 transaction.contractPayload.price = price;
                 transaction.contractPayload.priceSymbol = priceSymbol;
-                transaction.contractPayload.fee = 250;
+                transaction.contractPayload.fee = 500;
                 
                 message = "Sell NFTs with IDs: " + nfts + " for " + price + " " + priceSymbol;
                 hive_keychain.requestCustomJson(document.querySelector('#usernameInput').value, "ssc-mainnet-hive", "Active", JSON.stringify(transaction), message, function(response) {
