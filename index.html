@@ -3,15 +3,35 @@
         <title>
             Kalavian Tales
         </title>
+<style>
+html, body{
+  margin: 0; /* Stripping out margin and padding so .bg can be full width*/
+  padding: 0;
+  width: 100%;  /*Setting parent width -- child width is relative*/
+  height: 100%; /*Setting parent height -- child height is relative*/
+}
+.bg {
+  box-sizing: border-box; /*Not necessary in this situation*/
+  display: block; /*Not necessary, but we do want it this way*/
+  width: 100vw;  /*Not necessary, but we do want it this way*/
+  height: 100vh; /*Necessary.  100vh = 100% of the viewport height*/
+  padding: 0; /* No padding */
+  margin: 0; /* No margins */
+  background: url('bg/toth.jpg') no-repeat center center;
+  /* Shorthand: image, repeat, X align, Y align. */
+  background-size: cover; /* Cover all available space*/
+}
+</style>
     </head>
-    <body>
+    <body class="bg">
 	<img src="logos/k.png" width="180" alt="Kalavian Tales Logo.">
 	<br><br>
 	<h2>
-	<a href="./nftmanager/home.html">Visit the <img src="logos/nftmanager.png"></a>
+	<a href="./nftmanager/home.html"><img src="logos/nftmanager.png"></a>
         </h2>
 	<br><br>
 	<a href="https://hive-engine.com/?p=market&t=KATAMI"><img src="logos/katami.png" width="96"></a>
-	<p>Credits: The Kalavian Tales NFT Manager is derived from the non-licensed but public <a href="https://github.com/okean123/okean123.github.io/tree/master/NFTExplorer">NFTExplorer</a>, developed by Github users okean123 and Rishi556 in 2020 and 2021.</p>
+	<br><br>
+	<p style="color:white;">Credits: The Kalavian Tales NFT Manager is derived from the non-licensed but public <a href="https://github.com/okean123/okean123.github.io/tree/master/NFTExplorer">NFTExplorer</a>, developed by Github users okean123 and Rishi556 in 2020 and 2021.</p>
     </body>
 </html>
