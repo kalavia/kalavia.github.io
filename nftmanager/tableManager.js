@@ -1,3 +1,111 @@
+function buildMarketTable(dataInJson) {
+            // Get data for table header. 
+            var col = [];
+            for (var i = 0; i < dataInJson.length; i++) {
+                for (var key in dataInJson[i]) {
+                    if (col.indexOf(key) === -1) {
+                        col.push(key);
+                    }
+                }
+            }
+            
+             // CREATE DYNAMIC TABLE.
+            var table = document.createElement("table");
+            table.setAttribute("id", "jsonDataTable");          
+              // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+            var tr = table.insertRow(-1);    
+            
+            for (var i = -2; i < col.length + 1; i++) {
+                var th = document.createElement("th");      // TABLE HEADER.
+                if (i == -1) { // check boxes
+                    // th.innerHTML = '<input type="checkbox" id="mainCheck" name="checkAll" onclick="" style = "visibility: hidden">';
+                    th.innerHTML = '<button type="button" id="checkboxButton" name="Uncheck" onclick="uncheckBoxes()" style = "visibility: hidden" > Uncheck </button>';
+                    tr.appendChild(th);
+                }
+                else if (i < col.length) {
+                    th.innerText = col[i];
+                    tr.appendChild(th);
+                }
+                else {
+                    th.innerText = "Options";
+                    tr.appendChild(th);
+                }
+                
+            }
+            
+            let cbID = 0;
+            // ADD JSON DATA TO THE TABLE AS ROWS.
+            for (var i = 0; i < dataInJson.length; i++) {
+                
+                tr = table.insertRow(-1);
+                for (var j = -2; j < col.length + 1; j++) {  
+                    if (j == -2) {
+                        var tabCell = tr.insertCell(-1);
+                        // add check box for multiple transfer                   
+                        $('<input />', { type: 'checkbox', id: 'cb'+ cbID, name: 'sendCB', value: dataInJson[i]._id, onclick: 'getSelected()' }).appendTo(tabCell);
+                        cbID++;
+                        // checkCol.appendChild(btn);     
+                        }
+                    else if (j == -1) {
+                            var tabCell = tr.insertCell(-1);
+                            tabCell.innerHTML = `
+			    <div class="card_parent">
+			    <img class=\"card_bg\" src=\"../cards/${dataInJson[i][col[0]]}.png\">
+			    <img class=\"card_fg\" src=\"../cards/${dataInJson[i][col[0]]}/${dataInJson[i][col[1]]}.jpg\">
+			    </div>
+			    `;
+
+		    }
+                    else if (j < col.length) {
+                            var tabCell = tr.insertCell(-1);
+                            tabCell.innerHTML = dataInJson[i][col[j]];
+                        } 
+                    else {
+                        var tabCell = tr.insertCell(-1);
+                        // build the send button
+                        var btn = document.createElement('button');
+                        btn.type = "button";
+                        btn.className = "send-btn";
+                        btn.value = JSON.stringify(dataInJson[i]);
+                        btn.addEventListener('click', function() {
+                            sendNFT(this.value);
+                            }, false);
+                        btn.innerHTML = '<img src="images/send.png" />';
+                        tabCell.appendChild(btn); 
+                        
+                        var divider = document.createElement('div');
+                        divider.className = "divider";
+                        tabCell.appendChild(divider); 
+                        
+                        // build the sell button
+                        var sellBtn = document.createElement('button');
+                        sellBtn.type = "button";
+                        sellBtn.className = "sell-btn";
+                        sellBtn.value = JSON.stringify(dataInJson[i]);
+                        sellBtn.addEventListener('click', function() {
+                            getDialog("singleSell", this.value);
+                            }, false);
+                        sellBtn.innerHTML = '<img src="images/sell.png" />';
+                        tabCell.appendChild(sellBtn); 
+                    }
+                    
+                }
+                
+            let searchField = document.querySelector('#searchField');
+            searchField.style.visibility = "visible";
+            searchField.placeholder="Search wallet..."
+            searchField.addEventListener('keyup', filterTable, false);
+            }
+    
+            document.querySelector('#totalCardsLabel').innerText = "Total NFTs: " + dataInJson.length;
+    
+            // ADD TABLE TO DOC
+            document.getElementById("dataTable").innerHTML = "";
+            document.getElementById("dataTable").appendChild(table);
+
+        } // end create table function
+
+
 function buildTable(dataInJson) {
             // Get data for table header. 
             var col = [];

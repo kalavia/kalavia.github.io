@@ -79,6 +79,7 @@ async function loadMarket2() {
             offSet += 1000;
         }
     }
-    buildTable(APIDataJson);
+    console.log("API Market data"+JSONdata);
+    buildMarketTable(APIDataJson);
 }
 

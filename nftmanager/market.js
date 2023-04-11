@@ -49,38 +49,18 @@ function sortData(data) {
             JSONdata[i].seller = data[i].account;
             JSONdata[i].nftId = data[i].nftId;
             switch(currentTable) {
-                case 'STAR': 
+                case 'KATAN': 
                     // JSONdata[i].card = data[i].grouping.class + ": "+ data[i].grouping.type;
-					JSONdata[i].class = data[i].grouping.class;
-					JSONdata[i].type = data[i].grouping.type;
-                    break;
-                case 'CITY': 
-                    JSONdata[i].name = data[i].grouping.name;
-                    break;
-				case "NFTSR":
-					JSONdata[i].artSeries = data[i].grouping.artSeries;
-					break;
-                case "DCROPS":
-                    JSONdata[i].card = data[i].grouping.name;
-                    primary = JSON.parse(data[i].grouping.primary)
-                    if (primary.type == 'SEED') {
-                        switch(primary.s[0]) {
-                            case 0: JSONdata[i].season = "Spring"; break;
-                            case 1: JSONdata[i].season = "Summer"; break;
-                            case 2: JSONdata[i].season = "Fall"; break;
-                            case 3: JSONdata[i].season = "Winter"; break;
-                            default: JSONdata[i].season = "None"; break;
-                        }
-                    }
-                    else {
-                        JSONdata[i].season = "Land"
-                    }
-                    JSONdata[i].rarity = JSON.parse(data[i].grouping.nft).rarity
+		    JSONdata[i].name = data[i].grouping.name;
+		    JSONdata[i].variation = data[i].grouping.variation;
+		    JSONdata[i].id = data[i].grouping.id;
+		    JSONdata[i].power = data[i].grouping.power;
                     break;
             }
             JSONdata[i].price = parseFloat(data[i].price) 
-			JSONdata[i].priceSymbol = data[i].priceSymbol;
+	    JSONdata[i].priceSymbol = data[i].priceSymbol;
         }
+    console.log("Market data"+JSONdata);
     return JSONdata;
 }
 
@@ -117,6 +97,7 @@ async function loadMarket() {
             offSet += 1000;
         }
     }
+    console.log("API Data: "+APIDataJson)
     buildTableDirect(APIDataJson);
 }
 
@@ -134,9 +115,11 @@ function buildTableDirect(data) {
         nfts[i].push(data[i].seller);
         nfts[i].push(data[i].nftId);
             switch(currentTable) {
-                case 'STAR': 
-                    nfts[i].push(data[i].class);
-                    nfts[i].push(data[i].type);
+                case 'KATAN': 
+                    nfts[i].push(data[i].name);
+                    nfts[i].push(data[i].variation);
+                    nfts[i].push(data[i].id);
+                    nfts[i].push(data[i].power);
                     break;
                 case 'CITY': 
                     nfts[i].push(data[i].name);
@@ -172,20 +155,14 @@ function buildTableDirect(data) {
     cols.push({title: "seller"});
     cols.push({title: "nftId"});
     switch(currentTable) {
-        case 'STAR': 
-            cols.push({title: "class"});
-            cols.push({title: "type"});
+        case 'KATAN': 
+            cols.push({title: "name"});
+            cols.push({title: "variation"});
+            cols.push({title: "other"});
+            cols.push({title: "power"});
             break;
         case 'CITY': 
             cols.push({title: "name"});
-            break;
-        case "NFTSR":
-            cols.push({title: "artSeries"});
-            break;
-        case "DCROPS":
-            cols.push({title: "card"});
-            cols.push({title: "season"});
-            cols.push({title: "rarity"});
             break;
     }
     cols.push({title: "price"});
@@ -194,7 +171,7 @@ function buildTableDirect(data) {
     
     let searchPaneCols;
 	switch(currentTable) {
-		case "STAR": searchPaneCols = [3,4,6]; break;
+		case "KATAN": searchPaneCols = [1,3,4]; break;
 		case "CITY": searchPaneCols = [1,3,5]; break;
 		case "DCROPS": searchPaneCols = [1,3,4,5,7]; break;
 		case "NFTSR": searchPaneCols = [1,3,5]; break;
@@ -202,7 +179,7 @@ function buildTableDirect(data) {
     
     let notOrderable = [0];
     switch(currentTable) {
-		case "STAR": notOrderable.push(7); break;
+		case "KATAN": notOrderable.push(6); break;
 		case "CITY":  notOrderable.push(6); break;
 		case "DCROPS":  notOrderable.push(8); break;
 		case "NFTSR":  notOrderable.push(6); break;
@@ -233,10 +210,7 @@ function buildTableDirect(data) {
 
 // get the Pane layout switched by table
 function getPanesLayout(table) {
-    switch (table) {
-        case 'DCROPS': return 'columns-5'; break;
-        default: return 'columns-3'; break;
-    }
+    return 'columns-3';
 }
 
 function addSelected(item, seller) {
