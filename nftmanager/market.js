@@ -26,28 +26,23 @@ localStorage["buttonQueue"] = JSON.stringify(new Array());
 var page = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
 
 // fetches actual data
-var getData = function(contract, table, offSet) {
+var getData = function(contract, table, offSet, query) {
     return new Promise(function(resolve, reject) {  
-        ssc.find(contract, table, {}, 1000, offSet, [], (err, result) => {          
+        ssc.find(contract, table, query, 1000, offSet, [], (err, result) => {          
             if (result) {
-                APIDataJson = result;
                 resolve(result);
             } else {
-                reject(Error("Failed to get JSON data!")); 
+                reject(Error("Failed to get JSON data for table "+table+"! ")); 
             }
         });
     });
 }
-
-//await getData("nft", "KATANinstances", {}).then( function(result){NFTDataJson = sortData(result)});
-//console.log(NFTDataJson)
 
 // fetches actual data
 var getOneData = function(contract, table, query) {
     return new Promise(function(resolve, reject) { 
         ssc.find(contract, table, query, (err, result) => {
             if (result) {
-                APIDataJson = result;
                 resolve(result);
             } else {
                 reject(Error("Failed to get JSON data!"));
@@ -58,30 +53,32 @@ var getOneData = function(contract, table, query) {
 
 
 // returns relevant data
-function sortData(data) {
+function sortData(data, currentTable) {
         let JSONdata = [];
-        if (page.includes("showMarket")) {
-            currentTable = new URL(document.URL).searchParams.get("table"); 
-        }
+        //if (page.includes("showMarket")) {
+        //    currentTable = new URL(document.URL).searchParams.get("table"); 
+        //}
         for (let i = 0 ; i < data.length; i++) { 
             JSONdata.push({});
-            JSONdata[i].seller = data[i].account;
-            JSONdata[i].nftId = data[i].nftId;
             switch(currentTable) {
-                case 'KATAN': 
+                case 'KATANsellBook': 
                     // JSONdata[i].card = data[i].grouping.class + ": "+ data[i].grouping.type;
+                    JSONdata[i].seller = data[i].account;
+                    JSONdata[i].nftId = data[i].nftId;
 		    JSONdata[i].name = data[i].grouping.name;
+                    JSONdata[i].price = parseFloat(data[i].price) 
+	            JSONdata[i].priceSymbol = data[i].priceSymbol;
                     break;
                 case 'KATANinstances': 
                     // JSONdata[i].card = data[i].grouping.class + ": "+ data[i].grouping.type;
-		    JSONdata[i].name = data[i].name;
-		    JSONdata[i].variation = data[i].variation;
-		    JSONdata[i].id = data[i].id;
-		    JSONdata[i].power = data[i].power;
+		    JSONdata[i].id = data[i]._id;
+		    JSONdata[i].owner = data[i].account;
+		    JSONdata[i].name = data[i].properties.name;
+		    JSONdata[i].variation = data[i].properties.variation;
+		    JSONdata[i].other = data[i].properties.id;
+		    JSONdata[i].power = data[i].properties.power;
                     break;
             }
-            JSONdata[i].price = parseFloat(data[i].price) 
-	    JSONdata[i].priceSymbol = data[i].priceSymbol;
         }
     //console.log("Source data: "+JSON.stringify(data));
     //console.log("Market data: "+JSON.stringify(JSONdata));
@@ -98,7 +95,15 @@ async function loadMarket() {
     table = table + "sellBook";
     // get all data not only first 1000
     let offSet = 0;
-    await getData("nftmarket", table, offSet).then( function(result){APIDataJson = sortData(result)});
+    await getData("nftmarket", table, offSet, {}).then( function(result){APIDataJson = sortData(result,"KATANsellBook")});
+    
+    /*
+     * Temporary: retrieve full list with non-null owners:
+     * Next step: retrieve list based on IDs retrieved above.
+     */
+    await getData("nft", "KATANinstances", 0, {'account' : { $ne : 'null'}}).then( function(result){NFTDataJson = sortData(result,"KATANinstances")});
+    //console.log(NFTDataJson)
+
     let isMore = false;
     // if bigger than thousand enters loop with offset
     if (APIDataJson.length == 1000) { // Should be: if 999
@@ -109,7 +114,7 @@ async function loadMarket() {
         let length1 = APIDataJson.length;  
         let APIDataJsonOld = APIDataJson;
         await getData("nftmarket", table, offSet).then( function(result){ 
-            let newData = sortData(result);
+            let newData = sortData(result,"KATANsellBook");
             APIDataJson = [...APIDataJsonOld, ...newData];                    
         });
         
@@ -122,7 +127,7 @@ async function loadMarket() {
             offSet += 1000;
         }
     }
-    console.log("API Data: "+JSON.stringify(APIDataJson))
+    //console.log("API Data: "+JSON.stringify(APIDataJson))
     buildTableDirect(APIDataJson);
 }
 
@@ -140,19 +145,15 @@ function buildTableDirect(data) {
         nfts[i].push(data[i].seller);
         nfts[i].push(data[i].nftId);
         nfts[i].push(data[i].name);
-        
-        //ssc.findOne(
-        //   "nft", //smart contract name
-        //   "KATANinstances", //table from the smart contract
-        //   { '_id': { '$eq': data[i].nftId } }, //parameters for search
-        //   (err, result) => {
-        //   console.log("error: "+err);
-        //   console.log("result: "+result);
-        //   }
-        //);
-	//nfts[i].push(data[i].variation);
-        //nfts[i].push(data[i].id);
-        //nfts[i].push(data[i].power);
+      
+	// Retrieve extra values from NFT table.
+	//console.log(NFTDataJson)
+        var nftAttributes = NFTDataJson.filter(e => e.id == data[i].nftId);
+        console.log(nftAttributes); 
+
+	nfts[i].push(nftAttributes[0].variation);
+        nfts[i].push(nftAttributes[0].other);
+        nfts[i].push(nftAttributes[0].power);
 
 	nfts[i].push(parseFloat(data[i].price) );
         nfts[i].push(data[i].priceSymbol);
@@ -176,6 +177,9 @@ function buildTableDirect(data) {
     cols.push({title: "seller"});
     cols.push({title: "nftId"});
     cols.push({title: "name"});
+    cols.push({title: "variation"});
+    cols.push({title: "other"});
+    cols.push({title: "power"});
     cols.push({title: "price"});
     cols.push({title: "priceSymbol"});
     cols.push({title: "Options"})
@@ -216,7 +220,7 @@ function buildTableDirect(data) {
 		]
 	});
     
-    console.log(cols)
+    //console.log(cols)
 
     table.on( 'draw', updateRemovedButtons);
     document.getElementById("loadButton").disabled = false;
