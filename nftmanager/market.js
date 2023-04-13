@@ -37,7 +37,26 @@ var getData = function(contract, table, offSet) {
             }
         });
     });
+}
+
+//await getData("nft", "KATANinstances", {}).then( function(result){NFTDataJson = sortData(result)});
+//console.log(NFTDataJson)
+
+// fetches actual data
+var getOneData = function(contract, table, query) {
+    return new Promise(function(resolve, reject) { 
+        ssc.find(contract, table, query, (err, result) => {
+            if (result) {
+                APIDataJson = result;
+                resolve(result);
+            } else {
+                reject(Error("Failed to get JSON data!"));
+            }
+        });
+    });
 } 
+
+
 // returns relevant data
 function sortData(data) {
         let JSONdata = [];
@@ -52,17 +71,23 @@ function sortData(data) {
                 case 'KATAN': 
                     // JSONdata[i].card = data[i].grouping.class + ": "+ data[i].grouping.type;
 		    JSONdata[i].name = data[i].grouping.name;
-		    JSONdata[i].variation = data[i].grouping.variation;
-		    JSONdata[i].id = data[i].grouping.id;
-		    JSONdata[i].power = data[i].grouping.power;
+                    break;
+                case 'KATANinstances': 
+                    // JSONdata[i].card = data[i].grouping.class + ": "+ data[i].grouping.type;
+		    JSONdata[i].name = data[i].name;
+		    JSONdata[i].variation = data[i].variation;
+		    JSONdata[i].id = data[i].id;
+		    JSONdata[i].power = data[i].power;
                     break;
             }
             JSONdata[i].price = parseFloat(data[i].price) 
 	    JSONdata[i].priceSymbol = data[i].priceSymbol;
         }
-    console.log("Market data"+JSONdata);
+    //console.log("Source data: "+JSON.stringify(data));
+    //console.log("Market data: "+JSON.stringify(JSONdata));
     return JSONdata;
 }
+
 
 // loads the UI elements
 async function loadMarket() {
@@ -97,7 +122,7 @@ async function loadMarket() {
             offSet += 1000;
         }
     }
-    console.log("API Data: "+APIDataJson)
+    console.log("API Data: "+JSON.stringify(APIDataJson))
     buildTableDirect(APIDataJson);
 }
 
@@ -114,26 +139,22 @@ function buildTableDirect(data) {
         }
         nfts[i].push(data[i].seller);
         nfts[i].push(data[i].nftId);
-            switch(currentTable) {
-                case 'KATAN': 
-                    nfts[i].push(data[i].name);
-                    nfts[i].push(data[i].variation);
-                    nfts[i].push(data[i].id);
-                    nfts[i].push(data[i].power);
-                    break;
-                case 'CITY': 
-                    nfts[i].push(data[i].name);
-                    break;
-				case "NFTSR":
-                    nfts[i].push(data[i].artSeries);
-					break;
-                case "DCROPS":
-                    nfts[i].push(data[i].card);
-                    nfts[i].push(data[i].season);
-                    nfts[i].push(data[i].rarity);
-                    break;
-            }
-        nfts[i].push(parseFloat(data[i].price) );
+        nfts[i].push(data[i].name);
+        
+        //ssc.findOne(
+        //   "nft", //smart contract name
+        //   "KATANinstances", //table from the smart contract
+        //   { '_id': { '$eq': data[i].nftId } }, //parameters for search
+        //   (err, result) => {
+        //   console.log("error: "+err);
+        //   console.log("result: "+result);
+        //   }
+        //);
+	//nfts[i].push(data[i].variation);
+        //nfts[i].push(data[i].id);
+        //nfts[i].push(data[i].power);
+
+	nfts[i].push(parseFloat(data[i].price) );
         nfts[i].push(data[i].priceSymbol);
         // set button data
         if (loggedIn) {
@@ -154,17 +175,7 @@ function buildTableDirect(data) {
     cols.push({title: "<button id = 'removeAllBtn' style = 'visibility: hidden;' onclick='removeAllSelected()'>Remove all</button>"});
     cols.push({title: "seller"});
     cols.push({title: "nftId"});
-    switch(currentTable) {
-        case 'KATAN': 
-            cols.push({title: "name"});
-            cols.push({title: "variation"});
-            cols.push({title: "other"});
-            cols.push({title: "power"});
-            break;
-        case 'CITY': 
-            cols.push({title: "name"});
-            break;
-    }
+    cols.push({title: "name"});
     cols.push({title: "price"});
     cols.push({title: "priceSymbol"});
     cols.push({title: "Options"})
@@ -184,6 +195,7 @@ function buildTableDirect(data) {
 		case "DCROPS":  notOrderable.push(8); break;
 		case "NFTSR":  notOrderable.push(6); break;
 	}
+
     
     var table = $('#table').DataTable({
         "data": nfts,
@@ -204,6 +216,8 @@ function buildTableDirect(data) {
 		]
 	});
     
+    console.log(cols)
+
     table.on( 'draw', updateRemovedButtons);
     document.getElementById("loadButton").disabled = false;
 } // end build table
