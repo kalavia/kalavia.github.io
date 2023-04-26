@@ -48,7 +48,7 @@ function buildMarketTable(dataInJson) {
                         }
                     else if (j == -1) {
 
-			    if ((dataInJson[i][col[5]]).startsWith("no:") {
+			    /*if ((dataInJson[i][col[5]]).startsWith("no:") {
                             	var tabCell = tr.insertCell(-1);
                             	tabCell.innerHTML = `
 			    	<div class="card_parent">
@@ -56,7 +56,7 @@ function buildMarketTable(dataInJson) {
 			    	</div>
                                 `;
 			    }
-		            else {
+		            else {*/
 
                             	var tabCell = tr.insertCell(-1);
                             	tabCell.innerHTML = `
@@ -65,7 +65,7 @@ function buildMarketTable(dataInJson) {
 			    	<img class=\"card_fg\" src=\"../cards/${dataInJson[i][col[0]]}/${dataInJson[i][col[1]]}.jpg\">
 			    	</div>
 			    	`;
-		            }
+		            //}
 
 		    }
                     else if (j < col.length) {
