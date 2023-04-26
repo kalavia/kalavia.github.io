@@ -47,13 +47,25 @@ function buildMarketTable(dataInJson) {
                         // checkCol.appendChild(btn);     
                         }
                     else if (j == -1) {
-                            var tabCell = tr.insertCell(-1);
-                            tabCell.innerHTML = `
-			    <div class="card_parent">
-			    <img class=\"card_bg\" src=\"../cards/${dataInJson[i][col[0]]}.png\">
-			    <img class=\"card_fg\" src=\"../cards/${dataInJson[i][col[0]]}/${dataInJson[i][col[1]]}.jpg\">
-			    </div>
-			    `;
+
+			    if ((dataInJson[i][col[5]]).startsWith("no:") {
+                            	var tabCell = tr.insertCell(-1);
+                            	tabCell.innerHTML = `
+			    	<div class="card_parent">
+			    	<img class=\"card_bg\" src=\"../cards/Troops/${dataInJson[i][col[0]]}.png\">
+			    	</div>
+                                `;
+			    }
+		            else {
+
+                            	var tabCell = tr.insertCell(-1);
+                            	tabCell.innerHTML = `
+			    	<div class="card_parent">
+			    	<img class=\"card_bg\" src=\"../cards/${dataInJson[i][col[0]]}.png\">
+			    	<img class=\"card_fg\" src=\"../cards/${dataInJson[i][col[0]]}/${dataInJson[i][col[1]]}.jpg\">
+			    	</div>
+			    	`;
+		            }
 
 		    }
                     else if (j < col.length) {
