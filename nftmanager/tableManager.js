@@ -1,3 +1,26 @@
+function buildNFT(Json_row) {
+    console.log(Json_row)
+
+    if(Json_row.hasOwnProperty('id')) {
+        if ((Json_row['id']).startsWith("no:")) {
+            return `
+            <div class="card_parent">
+            <img class=\"card_bg\" src=\"../cards/Troops/${Json_row['name']}.png\">
+            </div>
+            `;
+	}
+    }
+    
+    return `
+        <div class="card_parent">
+        <img class=\"card_bg\" src=\"../cards/${Json_row['name']}.png\">
+        <img class=\"card_fg\" src=\"../cards/${Json_row['name']}/${Json_row['variation']}.jpg\">
+        </div>
+        `;
+        
+
+}
+
 function buildMarketTable(dataInJson) {
             // Get data for table header. 
             var col = [];
@@ -47,26 +70,8 @@ function buildMarketTable(dataInJson) {
                         // checkCol.appendChild(btn);     
                         }
                     else if (j == -1) {
-
-			    /*if ((dataInJson[i][col[5]]).startsWith("no:") {
-                            	var tabCell = tr.insertCell(-1);
-                            	tabCell.innerHTML = `
-			    	<div class="card_parent">
-			    	<img class=\"card_bg\" src=\"../cards/Troops/${dataInJson[i][col[0]]}.png\">
-			    	</div>
-                                `;
-			    }
-		            else {*/
-
-                            	var tabCell = tr.insertCell(-1);
-                            	tabCell.innerHTML = `
-			    	<div class="card_parent">
-			    	<img class=\"card_bg\" src=\"../cards/${dataInJson[i][col[0]]}.png\">
-			    	<img class=\"card_fg\" src=\"../cards/${dataInJson[i][col[0]]}/${dataInJson[i][col[1]]}.jpg\">
-			    	</div>
-			    	`;
-		            //}
-
+                          var tabCell = tr.insertCell(-1);
+                          tabCell.innerHTML = buildNFT(dataInJson[i]);
 		    }
                     else if (j < col.length) {
                             var tabCell = tr.insertCell(-1);
@@ -167,14 +172,8 @@ function buildTable(dataInJson) {
                         // checkCol.appendChild(btn);     
                         }
                     else if (j == -1) {
-                            var tabCell = tr.insertCell(-1);
-                            tabCell.innerHTML = `
-			    <div class="card_parent">
-			    <img class=\"card_bg\" src=\"../cards/${dataInJson[i][col[0]]}.png\">
-			    <img class=\"card_fg\" src=\"../cards/${dataInJson[i][col[0]]}/${dataInJson[i][col[1]]}.jpg\">
-			    </div>
-			    `;
-
+                          var tabCell = tr.insertCell(-1);
+                          tabCell.innerHTML = buildNFT(dataInJson[i]);
 		    }
                     else if (j < col.length) {
                             var tabCell = tr.insertCell(-1);
