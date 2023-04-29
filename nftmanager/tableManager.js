@@ -6,6 +6,7 @@ function buildNFT(Json_row) {
             return `
             <div class="card_parent">
             <img class=\"card_bg\" src=\"../cards/Troops/${Json_row['name']}.png\">
+	    <p class=\"text_fg\">Variation: ${Json_row['variation']}</p>
             </div>
             `;
 	}
